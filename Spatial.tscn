@@ -1,0 +1,84 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://Vehicle.gd" type="Script" id=1]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 2, 2, 2.5 )
+
+[sub_resource type="CylinderMesh" id=2]
+top_radius = 0.5
+bottom_radius = 0.5
+height = 0.5
+
+[sub_resource type="SpatialMaterial" id=3]
+flags_unshaded = true
+albedo_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="CylinderMesh" id=4]
+top_radius = 0.8
+bottom_radius = 0.8
+height = 0.5
+
+[sub_resource type="BoxShape" id=5]
+
+[sub_resource type="CubeMesh" id=6]
+size = Vector3( 100, 1, 100 )
+
+[sub_resource type="BoxShape" id=7]
+extents = Vector3( 50, 0.5, 50 )
+
+[node name="Spatial" type="Spatial"]
+
+[node name="Vehicle" type="KinematicBody" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 41.4492, 0 )
+script = ExtResource( 1 )
+
+[node name="Mesh" type="MeshInstance" parent="Vehicle"]
+mesh = SubResource( 1 )
+material/0 = null
+
+[node name="Mesh2" type="MeshInstance" parent="Vehicle/Mesh"]
+transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, -1.24502, -0.740917, 1.06215 )
+mesh = SubResource( 2 )
+material/0 = SubResource( 3 )
+
+[node name="Mesh3" type="MeshInstance" parent="Vehicle/Mesh"]
+transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, -1.24502, -0.457909, -0.695295 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 3 )
+
+[node name="Mesh4" type="MeshInstance" parent="Vehicle/Mesh"]
+transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, 1.25152, -0.755093, 1.0433 )
+mesh = SubResource( 2 )
+material/0 = SubResource( 3 )
+
+[node name="Mesh5" type="MeshInstance" parent="Vehicle/Mesh"]
+transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, 1.25152, -0.472084, -0.71414 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 3 )
+
+[node name="Camera" type="Camera" parent="Vehicle"]
+transform = Transform( -1, 1.7319e-07, -2.76003e-07, 0, 0.847048, 0.531517, 3.25841e-07, 0.531517, -0.847048, 0, 6.20891, -13.0901 )
+current = true
+
+[node name="CollisionShape" type="CollisionShape" parent="Vehicle"]
+shape = SubResource( 5 )
+
+[node name="StaticBody" type="StaticBody" parent="."]
+
+[node name="Ground" type="MeshInstance" parent="StaticBody"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 6 )
+material/0 = null
+
+[node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
+shape = SubResource( 7 )
+
+[node name="OmniLight" type="OmniLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.9491, 0 )
+light_color = Color( 0.992157, 0.717647, 0.192157, 1 )
+light_specular = 0.0
+shadow_enabled = true
+shadow_bias = 3.64
+shadow_contact = 5.45
+omni_range = 65.5914
