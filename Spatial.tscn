@@ -1,13 +1,24 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Vehicle.gd" type="Script" id=1]
+[ext_resource path="res://Meshes/Temp Kart.obj" type="ArrayMesh" id=2]
 
-[sub_resource type="CubeMesh" id=1]
-size = Vector3( 2, 2, 2.5 )
+[sub_resource type="SpatialMaterial" id=9]
+params_cull_mode = 1
+params_grow = true
+params_grow_amount = 0.03
+albedo_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="SpatialMaterial" id=10]
+next_pass = SubResource( 9 )
+params_diffuse_mode = 4
+params_specular_mode = 3
+params_grow = true
+params_grow_amount = 0.0
 
 [sub_resource type="CylinderMesh" id=2]
-top_radius = 0.5
-bottom_radius = 0.5
+top_radius = 0.4
+bottom_radius = 0.4
 height = 0.5
 
 [sub_resource type="SpatialMaterial" id=3]
@@ -18,6 +29,9 @@ albedo_color = Color( 0, 0, 0, 1 )
 top_radius = 0.8
 bottom_radius = 0.8
 height = 0.5
+
+[sub_resource type="SpatialMaterial" id=8]
+albedo_color = Color( 0, 0, 0, 1 )
 
 [sub_resource type="BoxShape" id=5]
 
@@ -37,27 +51,27 @@ script = ExtResource( 1 )
 transform = Transform( -1, 5.65816e-08, -3.20891e-07, 0, 0.984808, 0.173648, 3.25841e-07, 0.173648, -0.984808, 0, 4.16264, -6.21287 )
 fov = 95.7
 
-[node name="Mesh" type="MeshInstance" parent="Vehicle"]
-mesh = SubResource( 1 )
-material/0 = null
+[node name="kart" type="MeshInstance" parent="Vehicle"]
+mesh = ExtResource( 2 )
+material/0 = SubResource( 10 )
 
-[node name="Mesh2" type="MeshInstance" parent="Vehicle/Mesh"]
-transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, -1.24502, -0.740917, 1.06215 )
+[node name="tire_fr" type="MeshInstance" parent="Vehicle/kart"]
+transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, -1.03886, -0.031868, 1.11401 )
 mesh = SubResource( 2 )
 material/0 = SubResource( 3 )
 
-[node name="Mesh3" type="MeshInstance" parent="Vehicle/Mesh"]
-transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, -1.24502, -0.457909, -0.695295 )
+[node name="tire_br" type="MeshInstance" parent="Vehicle/kart"]
+transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, -1.24502, 0.356911, -1.18283 )
 mesh = SubResource( 4 )
 material/0 = SubResource( 3 )
 
-[node name="Mesh4" type="MeshInstance" parent="Vehicle/Mesh"]
-transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, 1.25152, -0.755093, 1.0433 )
+[node name="tire_fl" type="MeshInstance" parent="Vehicle/kart"]
+transform = Transform( -7.70342e-08, -1, 1.62553e-07, 0.00507432, -1.62941e-07, -0.999987, 0.999987, -7.62084e-08, 0.00507432, 1.03749, -0.0506592, 1.11471 )
 mesh = SubResource( 2 )
-material/0 = SubResource( 3 )
+material/0 = SubResource( 8 )
 
-[node name="Mesh5" type="MeshInstance" parent="Vehicle/Mesh"]
-transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, 1.25152, -0.472084, -0.71414 )
+[node name="tire_bl" type="MeshInstance" parent="Vehicle/kart"]
+transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, 1.25152, 0.35994, -1.12266 )
 mesh = SubResource( 4 )
 material/0 = SubResource( 3 )
 

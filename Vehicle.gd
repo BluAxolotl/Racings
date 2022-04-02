@@ -2,12 +2,10 @@ extends KinematicBody
 
 export var ACCEL = 2
 export var SPEED = 50
-export var TURN = 0.09
-export var MAXTURN = 1.5
+export var TURN = 3
+export var MAXTURN = 30
 export var FRIC = 1.05
-export var WEIGHT = 0.7
-
-var MAXFALL = WEIGHT*10
+export var WEIGHT = 150
 
 enum {FREE = -2, NEUTRAL = 0, FORWARD = 1}
 const BACKWARD = -0.3333
@@ -19,46 +17,29 @@ var motion = Vector3()
 var drive_state = NEUTRAL
 
 func _physics_process(delta):
-	var vec_angle = rotation_degrees.y
-	var mesh_angle = deg2rad(rotation_degrees.y)
+	var mesh_angle = deg2rad($kart.rotation_degrees.y)
 	
 	# Gravities
-	if (!is_on_floor()):
-		if (motion.y < MAXFALL):
-			motion.y -= WEIGHT
-		else:
-			motion.y = -MAXFALL
-	else:
-		motion.y = 0
+	motion.y = -WEIGHT
 	
 	# Turnings
 	
-	joy_dir = Input.get_joy_axis(1,0)
-	
-#	if (Input.is_action_just_pressed("L")):
-#		joy_dir = -1
-#	if (Input.is_action_just_pressed("R")):
-#		joy_dir = 1
-#
-#	if (Input.is_action_just_released("L") || Input.is_action_just_released("R")):
-#		accel_turn = 0
-#		if (Input.is_action_pressed("L")):
-#			joy_dir = -1
-#		elif (Input.is_action_pressed("R")):
-#			joy_dir = 1
-#		else:
-#			joy_dir = 0
-	
-	if (drive_state != NEUTRAL):
-		print("accel_turn: %s | maxturnsings: %s" % [accel_turn, joy_dir*MAXTURN])
-		if ((joy_dir > 0 and accel_turn < joy_dir*MAXTURN) or (joy_dir < 0 and accel_turn > joy_dir*MAXTURN)):
-			accel_turn += joy_dir*TURN
+	if (Input.is_action_just_pressed("L")):
+		joy_dir = -1
+	if (Input.is_action_just_pressed("R")):
+		joy_dir = 1
+
+	if (Input.is_action_just_released("L") || Input.is_action_just_released("R")):
+		if (Input.is_action_pressed("L")):
+			joy_dir = -1
+		elif (Input.is_action_pressed("R")):
+			joy_dir = 1
 		else:
-			accel_turn = joy_dir*MAXTURN
-	if (accel_turn != 0):
-		rotation_degrees.y -= accel_turn
-	
-	$Mesh.rotation_degrees.y = -accel_turn*10
+			joy_dir = 0
+			accel_turn = 0
+
+	if (drive_state != NEUTRAL && joy_dir != 0 && accel_turn != joy_dir*MAXTURN):
+		$Mesh.rotation_degrees.y -= joy_dir*TURN
 	
 	# Acceleratings
 	
@@ -78,7 +59,7 @@ func _physics_process(delta):
 		else:
 			drive_state = NEUTRAL
 	
-#	print($Mesh.rotation_degrees.y)
+	print(accel_speed)
 	
 	if (drive_state != NEUTRAL and drive_state != FREE):
 		if (accel_speed < drive_state*SPEED):

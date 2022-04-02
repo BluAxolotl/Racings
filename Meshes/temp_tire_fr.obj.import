@@ -1,0 +1,20 @@
+[remap]
+
+importer="wavefront_obj"
+type="Mesh"
+path="res://.import/temp_tire_fr.obj-6713c8deebff13ca4bf984e95a44e47f.mesh"
+
+[deps]
+
+files=[ "res://.import/temp_tire_fr.obj-6713c8deebff13ca4bf984e95a44e47f.mesh" ]
+
+source_file="res://Meshes/temp_tire_fr.obj"
+dest_files=[ "res://.import/temp_tire_fr.obj-6713c8deebff13ca4bf984e95a44e47f.mesh", "res://.import/temp_tire_fr.obj-6713c8deebff13ca4bf984e95a44e47f.mesh" ]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3( 1, 1, 1 )
+offset_mesh=Vector3( 0, 0, 0 )
+octahedral_compression=true
+optimize_mesh_flags=4286
