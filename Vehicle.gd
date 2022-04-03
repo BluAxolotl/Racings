@@ -1,5 +1,7 @@
 extends KinematicBody
 
+# Hello Logans NES
+
 export var ACCEL = 2
 export var SPEED = 70
 export var TURN = 0.1
