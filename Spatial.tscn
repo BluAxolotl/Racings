@@ -1,6 +1,21 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Vehicle.gd" type="Script" id=1]
+[ext_resource path="res://sprites/placeholder-ground.png" type="Texture" id=2]
+[ext_resource path="res://sprites/placeholder-road.png" type="Texture" id=3]
+
+[sub_resource type="ProceduralSky" id=19]
+
+[sub_resource type="Environment" id=17]
+background_mode = 2
+background_sky = SubResource( 19 )
+fog_color = Color( 0.509804, 0.756863, 1, 1 )
+glow_strength = 1.04
+glow_bloom = 1.0
+glow_blend_mode = 3
+adjustment_brightness = 2.66
+adjustment_contrast = 8.0
+adjustment_saturation = 8.0
 
 [sub_resource type="CubeMesh" id=1]
 size = Vector3( 2, 2, 2.5 )
@@ -22,23 +37,47 @@ height = 0.5
 [sub_resource type="BoxShape" id=5]
 
 [sub_resource type="CubeMesh" id=6]
-size = Vector3( 100, 1, 100 )
+size = Vector3( 900, 1, 900 )
+
+[sub_resource type="SpatialMaterial" id=8]
+albedo_texture = ExtResource( 2 )
+uv1_scale = Vector3( 0.1, 0.1, 0.1 )
+uv1_triplanar = true
 
 [sub_resource type="BoxShape" id=7]
-extents = Vector3( 50, 0.5, 50 )
+extents = Vector3( 450, 0.5, 450 )
+
+[sub_resource type="CubeMesh" id=12]
+size = Vector3( 100, 1, 200 )
+
+[sub_resource type="SpatialMaterial" id=18]
+albedo_texture = ExtResource( 3 )
+uv1_scale = Vector3( 0.1, 0.1, 0.1 )
+uv1_triplanar = true
+
+[sub_resource type="BoxShape" id=13]
+extents = Vector3( 50, 0.5, 100 )
 
 [node name="Spatial" type="Spatial"]
 
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 17 )
+
 [node name="Vehicle" type="KinematicBody" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 41.4492, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 294.876, 17.8872, 0 )
 script = ExtResource( 1 )
+
+[node name="Camera" type="Camera" parent="Vehicle"]
+transform = Transform( -1, 5.65816e-08, -3.20891e-07, 0, 0.984808, 0.173648, 3.25841e-07, 0.173648, -0.984808, 0, 4.16264, -6.21287 )
+fov = 95.7
+far = 2000.0
 
 [node name="Mesh" type="MeshInstance" parent="Vehicle"]
 mesh = SubResource( 1 )
 material/0 = null
 
-[node name="Mesh2" type="MeshInstance" parent="Vehicle/Mesh"]
-transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, -1.24502, -0.740917, 1.06215 )
+[node name="WheelR" type="MeshInstance" parent="Vehicle/Mesh"]
+transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, -1.24502, -0.740913, 1.06215 )
 mesh = SubResource( 2 )
 material/0 = SubResource( 3 )
 
@@ -47,8 +86,8 @@ transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, 
 mesh = SubResource( 4 )
 material/0 = SubResource( 3 )
 
-[node name="Mesh4" type="MeshInstance" parent="Vehicle/Mesh"]
-transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, 1.25152, -0.755093, 1.0433 )
+[node name="WheelL" type="MeshInstance" parent="Vehicle/Mesh"]
+transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, -0.999987, 0.999987, -4.28839e-08, 0.00507889, 1.25152, -0.755096, 1.0433 )
 mesh = SubResource( 2 )
 material/0 = SubResource( 3 )
 
@@ -57,28 +96,167 @@ transform = Transform( -4.37108e-08, -1, 1.62699e-07, 0.00507889, -1.62919e-07, 
 mesh = SubResource( 4 )
 material/0 = SubResource( 3 )
 
-[node name="Camera" type="Camera" parent="Vehicle"]
-transform = Transform( -1, 1.7319e-07, -2.76003e-07, 0, 0.847048, 0.531517, 3.25841e-07, 0.531517, -0.847048, 0, 6.20891, -13.0901 )
-current = true
-
 [node name="CollisionShape" type="CollisionShape" parent="Vehicle"]
 shape = SubResource( 5 )
 
 [node name="StaticBody" type="StaticBody" parent="."]
 
 [node name="Ground" type="MeshInstance" parent="StaticBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
 mesh = SubResource( 6 )
-material/0 = null
+material/0 = SubResource( 8 )
 
 [node name="CollisionShape" type="CollisionShape" parent="StaticBody"]
 shape = SubResource( 7 )
 
-[node name="OmniLight" type="OmniLight" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 12.9491, 0 )
-light_color = Color( 0.992157, 0.717647, 0.192157, 1 )
-light_specular = 0.0
-shadow_enabled = true
-shadow_bias = 3.64
-shadow_contact = 5.45
-omni_range = 65.5914
+[node name="TRack" type="Spatial" parent="."]
+
+[node name="StaticBody2" type="StaticBody" parent="TRack"]
+transform = Transform( 0.999999, 0, -0.0015708, 0, 1, 0, 0.0015708, 0, 0.999999, -312.48, 1.05225, -189.426 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody2"]
+shape = SubResource( 13 )
+
+[node name="StaticBody3" type="StaticBody" parent="TRack"]
+transform = Transform( 0.999999, 0, -0.0015708, 0, 1, 0, 0.0015708, 0, 0.999999, -312.778, 1.05225, 0.36428 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody3"]
+shape = SubResource( 13 )
+
+[node name="StaticBody4" type="StaticBody" parent="TRack"]
+transform = Transform( 0.999999, 0, -0.0015708, 0, 1, 0, 0.0015708, 0, 0.999999, -313.091, 1.05225, 199.352 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody4"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody4"]
+shape = SubResource( 13 )
+
+[node name="StaticBody7" type="StaticBody" parent="TRack"]
+transform = Transform( 0.999999, 0, -0.0015708, 0, 1, 0, 0.0015708, 0, 0.999999, 315.118, 1.05225, -188.673 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody7"]
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody7"]
+shape = SubResource( 13 )
+
+[node name="StaticBody8" type="StaticBody" parent="TRack"]
+transform = Transform( 0.999999, 0, -0.0015708, 0, 1, 0, 0.0015708, 0, 0.999999, 314.82, 1.05225, 1.11734 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody8"]
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody8"]
+shape = SubResource( 13 )
+
+[node name="StaticBody9" type="StaticBody" parent="TRack"]
+transform = Transform( 0.999999, 0, -0.0015708, 0, 1, 0, 0.0015708, 0, 0.999999, 314.507, 1.05225, 200.105 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody9"]
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody9"]
+shape = SubResource( 13 )
+
+[node name="StaticBody5" type="StaticBody" parent="TRack"]
+transform = Transform( 0.50136, 0, 0.865239, 0, 1, 0, -0.865239, 0, 0.50136, -252.118, 1.05225, 306.407 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody5"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody5"]
+shape = SubResource( 13 )
+
+[node name="StaticBody6" type="StaticBody" parent="TRack"]
+transform = Transform( 0.260336, 0, 0.965518, 0, 1, 0, -0.965518, 0, 0.260336, -83.6036, 1.05227, 376.485 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody6"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody6"]
+shape = SubResource( 13 )
+
+[node name="StaticBody10" type="StaticBody" parent="TRack"]
+transform = Transform( -0.257302, 0, 0.966331, 0, 1, 0, -0.966331, 0, -0.257302, 84.7645, 1.05225, 376.778 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody10"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody10"]
+shape = SubResource( 13 )
+
+[node name="StaticBody11" type="StaticBody" parent="TRack"]
+transform = Transform( -0.498639, 0, 0.86681, 0, 1, 0, -0.86681, 0, -0.498639, 253.475, 1.05227, 307.172 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody11"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody11"]
+shape = SubResource( 13 )
+
+[node name="StaticBody12" type="StaticBody" parent="TRack"]
+transform = Transform( 0.50136, 0, 0.865239, -7.56416e-08, -1, 4.38303e-08, 0.865239, -8.74228e-08, -0.50136, -252.118, 1.05226, -297.144 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody12"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody12"]
+shape = SubResource( 13 )
+
+[node name="StaticBody13" type="StaticBody" parent="TRack"]
+transform = Transform( 0.260336, 0, 0.965518, -8.44083e-08, -1, 2.27593e-08, 0.965518, -8.74228e-08, -0.260336, -83.6036, 1.05225, -367.222 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody13"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody13"]
+shape = SubResource( 13 )
+
+[node name="StaticBody14" type="StaticBody" parent="TRack"]
+transform = Transform( -0.257302, 0, 0.966331, -8.44794e-08, -1, -2.2494e-08, 0.966331, -8.74228e-08, 0.257302, 84.7645, 1.05227, -367.515 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody14"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody14"]
+shape = SubResource( 13 )
+
+[node name="StaticBody15" type="StaticBody" parent="TRack"]
+transform = Transform( -0.498639, 0, 0.86681, -7.57789e-08, -1, -4.35924e-08, 0.86681, -8.74228e-08, 0.498639, 253.475, 1.05225, -297.909 )
+
+[node name="Ground" type="MeshInstance" parent="TRack/StaticBody15"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.393948, 0.277004, 0.728968 )
+mesh = SubResource( 12 )
+material/0 = SubResource( 18 )
+
+[node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody15"]
+shape = SubResource( 13 )
