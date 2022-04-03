@@ -1,0 +1,22 @@
+Big List of Bullshit to do:
+===========================
+
+>>> We really need to establish a mood/tone/style for the game overall )._.)
+
+Graphics:
+	1. Lighting
+	2. Process for Track creation
+	3. Process for Vehicle creation
+
+Gameplay:
+	1. Title and Menu
+		- Settings
+		- Track Selection
+		- Character Selection
+		- Vehicle Selection
+	2. Vehicle
+		- Drifting
+		- Speed Boost
+		- Hurt States
+	3. Items
+	4. Trick System
