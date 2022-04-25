@@ -2,8 +2,9 @@ extends KinematicBody
 
 export var ACCEL = 3
 export var SPEED = 90
-export var TURN = 0.1
-export var MAXTURN = 2
+export var TURN = 0.07
+export var MAXTURN = 1.5
+export var DRIFT_STAT = 30
 export var DRIFT_TURN = 0.1
 export var MAX_DRIFT = 8
 export var FRIC = 1.05
@@ -15,6 +16,7 @@ enum {FREE = -2, NEUTRAL = 0, FORWARD = 1}
 const BACKWARD = -0.3333
 
 var joy_dir = 0
+var last_joy = 0
 var prev_joy_dir = 0
 var accel_turn = 0
 var drift_dir = 0
@@ -58,8 +60,21 @@ func _physics_process(delta):
 			drift_dir = joy_dir
 	
 	# Turnings
-	  
-	joy_dir = round(Input.get_joy_axis(1,0))
+	var temp_joy = round(Input.get_joy_axis(1,0))
+	if (last_joy != temp_joy):
+		joy_dir = temp_joy
+		last_joy = joy_dir
+	
+	if (Input.is_action_just_pressed("R")):
+		joy_dir = 1
+	if (Input.is_action_just_pressed("L")):
+		joy_dir = -1
+	if (Input.is_action_just_released("R") or Input.is_action_just_released("L")):
+		joy_dir = 0
+		if (Input.is_action_pressed("R")):
+			joy_dir = 1
+		if (Input.is_action_pressed("L")):
+			joy_dir = -1
 	
 	if (joy_dir != prev_joy_dir):
 		if (drifting):
@@ -70,7 +85,8 @@ func _physics_process(delta):
 		
 	
 	if (drifting):
-		if ((joy_dir > 0 and drift_accel < joy_dir*MAX_DRIFT) or (joy_dir < 0 and drift_accel > joy_dir*MAX_DRIFT)):
+		if ( ( (joy_dir > 0 and drift_accel < joy_dir*MAX_DRIFT) or (joy_dir < 0 and drift_accel > joy_dir*MAX_DRIFT) ) and drift_timer > DRIFT_STAT):
+			print(">>> DRIFT POWER >>>")
 			drift_accel += (joy_dir*DRIFT_TURN)
 		else:
 			drift_accel = (joy_dir*MAX_DRIFT)
@@ -86,6 +102,11 @@ func _physics_process(delta):
 			accel_turn /= 1.1
 		else:
 			accel_turn = 0
+	
+	if (drift_timer != 0 and drift_timer < DRIFT_STAT):
+		var start_amount = ( sin( ( (drift_timer) * PI ) / (DRIFT_STAT) ) * 1.5 ) * drift_dir
+		print("drift_timer: %s\nstart_amount: %s" % [drift_timer, start_amount])
+		accel_turn -= start_amount
 	
 	rotation_degrees.y -= accel_turn
 	
