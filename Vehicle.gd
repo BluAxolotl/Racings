@@ -167,10 +167,10 @@ func _physics_process(delta):
 		drive_timer = 0
 	
 	if (drive_dir != 0):
-		if (drifting and drive_dir == -1):
-			drive_dir = 0.1
 		accel_speed += drive_dir*ACCEL
 		accel_speed = clamp(accel_speed, -SPEED/3, SPEED)
+		if (drifting and drive_dir == -1):
+			accel_speed = SPEED*0.7
 	else:
 		if (accel_speed > 1 or accel_speed < -1):
 			accel_speed /= FRIC
