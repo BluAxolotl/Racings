@@ -4,11 +4,12 @@ export var ACCEL = 3
 export var SPEED = 90
 export var TURN = 0.07
 export var MAXTURN = 1.5
-export var DRIFT_STAT = 30
+export var DRIFT_STAT = 0
 export var DRIFT_TURN = 0.1
-export var MAX_DRIFT = 8
+export var MAX_DRIFT = 4
 export var FRIC = 1.05
 export var WEIGHT = 0.7
+export var MAX_BOOST = 300
 
 var MAXFALL = WEIGHT*10
 
@@ -24,12 +25,16 @@ var drifting = false
 var drift_timer = 0
 var drift_accel = 0
 var accel_speed = 0
+var boost_speed = 0
 var motion = Vector3()
 var drive_state = NEUTRAL
 var drive_dir = 0
 var drive_timer = 0
 
 var frame = 0
+
+func boost(x):
+	Globals.tween(self, "TRANS_CUBIC", 2, "boost_speed", x, 0, 2)
 
 func _physics_process(delta):
 	var vec_angle = rotation_degrees.y
@@ -45,19 +50,29 @@ func _physics_process(delta):
 		motion.y = 0
 	
 	# Driftings
-		
-		if (Input.is_action_pressed("DRIFT")):
-			drift_timer += 1
-			drifting = true
-		else:
-			drift_dir = 0
-			drift_timer = 0
-			drifting = false
-		
-		if (drift_timer == 1):
-			accel_turn = 0
-			drift_accel = -1
-			drift_dir = joy_dir
+	if (Input.is_action_pressed("DRIFT") and drift_timer > 50):
+		print("WOWAJODFJIOWJIOWOW")
+	
+	if (Input.is_action_just_released("DRIFT") and drift_timer > 50):
+		print("\n\nWOW!\n\n")
+		boost(100)
+	
+	if (Input.is_action_pressed("DRIFT")):
+		drift_timer += 1
+		drifting = true
+	else:
+		drift_dir = 0
+		drift_timer = 0
+		drifting = false
+	
+	if (drift_timer == 1):
+		accel_turn = 0
+		drift_accel = -1
+		drift_dir = joy_dir
+	
+	# """Itemings"""
+	if (Input.is_action_just_pressed("SELECT")):
+		boost(200)
 	
 	# Turnings
 	var temp_joy = round(Input.get_joy_axis(1,0))
@@ -85,19 +100,23 @@ func _physics_process(delta):
 		
 	
 	if (drifting):
-		if ( ( (joy_dir > 0 and drift_accel < joy_dir*MAX_DRIFT) or (joy_dir < 0 and drift_accel > joy_dir*MAX_DRIFT) ) and drift_timer > DRIFT_STAT):
-			print(">>> DRIFT POWER >>>")
-			drift_accel += (joy_dir*DRIFT_TURN)
-		else:
-			drift_accel = (joy_dir*MAX_DRIFT)
+		drift_accel += (joy_dir*DRIFT_TURN)
+		drift_accel = clamp(drift_accel, -MAX_DRIFT, MAX_DRIFT)
+#		if ( ( (joy_dir > 0 and drift_accel < joy_dir*MAX_DRIFT) or (joy_dir < 0 and drift_accel > joy_dir*MAX_DRIFT) ) and drift_timer > DRIFT_STAT):
+#			print(">>> DRIFT POWER >>>")
+#			drift_accel += (joy_dir*DRIFT_TURN)
+#		else:
+#			drift_accel = (joy_dir*MAX_DRIFT)
 		accel_turn = drift_dir - ((-drift_accel)/(MAX_DRIFT+2))
-#		print("accel_turn: %s\ndrift_dir: %s\ndrift_ppaDDADDAAD accel: %s" % [ accel_turn, drift_dir, drift_accel ])
+#		print("accel_turn: %s\ndrift_dir: %s\ndrift_accel: %s" % [ accel_turn, drift_dir, drift_accel ])
 	else:
 		if (drive_state != NEUTRAL and joy_dir != 0):
-			if ((joy_dir > 0 and accel_turn < joy_dir*MAXTURN) or (joy_dir < 0 and accel_turn > joy_dir*MAXTURN)):
-				accel_turn += (joy_dir*TURN)
-			else:
-				accel_turn = (joy_dir*MAXTURN)
+			accel_turn += (joy_dir*TURN)
+			accel_turn = clamp(accel_turn, -MAXTURN, MAXTURN)
+#			if ((joy_dir > 0 and accel_turn < joy_dir*MAXTURN) or (joy_dir < 0 and accel_turn > joy_dir*MAXTURN)):
+#				accel_turn += (joy_dir*TURN)
+#			else:
+#				accel_turn = (joy_dir*MAXTURN)
 		elif (abs(accel_turn) > 0.4):
 			accel_turn /= 1.1
 		else:
@@ -148,6 +167,8 @@ func _physics_process(delta):
 		drive_timer = 0
 	
 	if (drive_dir != 0):
+		if (drifting and drive_dir == -1):
+			drive_dir = 0.1
 		accel_speed += drive_dir*ACCEL
 		accel_speed = clamp(accel_speed, -SPEED/3, SPEED)
 	else:
@@ -158,8 +179,12 @@ func _physics_process(delta):
 			
 	prev_joy_dir = joy_dir
 	
-	motion.x = sin(mesh_angle)*(accel_speed)
-	motion.z = cos(mesh_angle)*(accel_speed)
+	boost_speed = clamp(boost_speed, -MAX_BOOST, MAX_BOOST)
+	
+	print(boost_speed)
+	
+	motion.x = sin(mesh_angle)*(accel_speed+boost_speed)
+	motion.z = cos(mesh_angle)*(accel_speed+boost_speed)
 	
 	move_and_slide(motion, Vector3(0,1,0))
 	frame += 1

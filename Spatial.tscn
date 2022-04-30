@@ -1,9 +1,10 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Vehicle.gd" type="Script" id=1]
 [ext_resource path="res://sprites/placeholder-ground.png" type="Texture" id=2]
 [ext_resource path="res://sprites/placeholder-road.png" type="Texture" id=3]
 [ext_resource path="res://Meshes/Temp Kart.obj" type="ArrayMesh" id=4]
+[ext_resource path="res://scripts/test_map.gd" type="Script" id=5]
 
 [sub_resource type="ProceduralSky" id=1]
 
@@ -57,6 +58,7 @@ uv1_triplanar = true
 extents = Vector3( 50, 0.5, 100 )
 
 [node name="Spatial" type="Spatial"]
+script = ExtResource( 5 )
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 2 )
@@ -258,4 +260,5 @@ mesh = SubResource( 10 )
 material/0 = SubResource( 11 )
 
 [node name="CollisionShape" type="CollisionShape" parent="TRack/StaticBody15"]
+transform = Transform( 1, -7.10543e-15, 0, -3.55271e-15, 1, -7.10543e-15, 0, 0, 1, 0, 0, 0 )
 shape = SubResource( 12 )
